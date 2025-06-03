@@ -1,4 +1,3 @@
-# Simple workflow for deploying static content to GitHub Pages
 name: Deploy static content to Pages
 
 on:
@@ -31,13 +30,50 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # ------------------------------------------------------------------
+      # IMPORTANT: Add and customize your project's build step here.
+      # The example below is for a typical Node.js project.
+      # If your 'build' folder is already committed and up-to-date in
+      # your repository, you might not need this build step.
+      # ------------------------------------------------------------------
+      - name: Setup Node.js # Optional: if your build process needs Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Specify your Node.js version
+
+      - name: Build project # If your 'build' folder is generated
+        run: |
+          echo "Starting build process..."
+          # Replace these with your project's actual build commands:
+          # e.g., if you use npm:
+          npm install
+          npm run build # This command should generate the './build' folder
+          # e.g., if you use yarn:
+          # yarn install
+          # yarn build
+          # e.g., if you use Jekyll:
+          # bundle install
+          # bundle exec jekyll build --destination ./build
+          # e.g., if you use Hugo:
+          # hugo --destination ./build
+          echo "Build process finished."
+
+      # This step helps you debug by showing what's in the build directory.
+      - name: List build directory contents
+        run: |
+          echo "Contents of ./build directory:"
+          ls -R ./build || echo "./build directory not found or empty."
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          # Upload entire repository
+          # Upload contents of 'build' directory
           path: './build'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
